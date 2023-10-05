@@ -1,0 +1,82 @@
+[
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/xml_pref_settings.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/xml/pref_settings.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_profile_test.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/profile_test.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/drawable-mdpi_ic_launcher_n.png.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/drawable-mdpi/ic_launcher_n.png"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/drawable-xhdpi_ic_launcher_n.png.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/drawable-xhdpi/ic_launcher_n.png"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_fw_update_dialog.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/fw_update_dialog.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_setup_password_dialog.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/setup_password_dialog.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/drawable-mdpi_ic_home.png.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/drawable-mdpi/ic_home.png"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_device_name.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/device_name.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_list_layout.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/list_layout.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_activity_login.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/activity_login.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/drawable-mdpi_bg_actionbar.png.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/drawable-mdpi/bg_actionbar.png"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_device_list.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/device_list.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/menu_main.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/menu/main.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_activity_main.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/activity_main.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_activity_main2.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/activity_main2.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/drawable-hdpi_ic_launcher_n.png.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/drawable-hdpi/ic_launcher_n.png"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout_input_password_dialog.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout/input_password_dialog.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout-w1240dp_activity_login.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout-w1240dp/activity_login.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/layout-w936dp_activity_login.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/layout-w936dp/activity_login.xml"
+    },
+    {
+        "merged": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/build/intermediates/res/merged/debug/xml_pref_settings2.xml.flat",
+        "source": "/Users/ayushkatuwal/Documents/My Projects/NeoSmartPen_v2/NASDK_sample_code/src/main/res/xml/pref_settings2.xml"
+    }
+]
