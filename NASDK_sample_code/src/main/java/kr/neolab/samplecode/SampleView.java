@@ -353,6 +353,7 @@ public class SampleView extends View
 			output = new BufferedWriter( new FileWriter( file));
 			output.write(neoInk);
 			output.close();
+//			Log.d("Show output file: ", output.toString());
 
 		} catch (Exception e) {
 			e.printStackTrace();
