@@ -1,3 +1,0 @@
-include ':NASDK_sample_code'
-include ':NASDK'
-project(':NASDK').projectDir=new File('../NASDK2.0_Studio/app')

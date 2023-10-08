@@ -20,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.ParcelUuid;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -37,7 +38,6 @@ import java.util.Set;
 import kr.neolab.sdk.pen.bluetooth.BTLEAdt;
 import kr.neolab.sdk.util.NLog;
 import kr.neolab.sdk.util.UuidUtil;
-
 
 /**
  * This Activity appears as a dialog. It lists any paired devices and
@@ -70,6 +70,8 @@ public class DeviceListActivity extends Activity
     Button scanLEButton;
     boolean is_le_scan = false;
     boolean isScanning = false;
+    private ScaleGestureDetector mScaleGestureDetector;
+    private float mScaleFactor = 1.0f;
 
     private ScanCallback mScanCallback = new ScanCallback() {
         @Override
@@ -156,6 +158,7 @@ public class DeviceListActivity extends Activity
 
         // Set result CANCELED in case the user backs out
         setResult( Activity.RESULT_CANCELED );
+//        mScaleGestureDetector = new ScaleGestureDetector(this, new ScaleListener());
 
         mHandler = new Handler();
 
