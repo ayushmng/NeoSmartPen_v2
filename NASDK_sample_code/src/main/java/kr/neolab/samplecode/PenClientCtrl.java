@@ -694,6 +694,7 @@ public class PenClientCtrl implements IPenMsgListener
 
 				try
 				{
+					NLog.d( "offline", "Reached here........" );
 					JSONArray list = new JSONArray( penMsg.getContent() );
 
 					int prvSec = -1;

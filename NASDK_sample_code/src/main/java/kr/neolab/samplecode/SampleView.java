@@ -12,7 +12,6 @@ import android.graphics.Path;
 import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 
@@ -274,7 +273,7 @@ public class SampleView extends View {
         Log.d("bg", "change page called");
 //		if(template == null) {
         try {
-            Bitmap template_temp_pdf3 = getBitmapFromAssets("template.png");
+            Bitmap template_temp_pdf3 = getBitmapFromAssets("firmware_files/template.png");
             template = Bitmap.createScaledBitmap(template_temp_pdf3, template_temp_pdf3.getWidth(), template_temp_pdf3.getHeight(), true);
             Log.d("bg", "template init success");
         } catch (Exception e) {

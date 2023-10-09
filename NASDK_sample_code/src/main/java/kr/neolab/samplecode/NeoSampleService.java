@@ -28,7 +28,7 @@ import kr.neolab.sdk.pen.penmsg.IOfflineDataListener;
 import kr.neolab.sdk.pen.penmsg.IPenDotListener;
 import kr.neolab.sdk.util.NLog;
 
-public class NeoSampleService extends Service {
+public class NeoSampleService extends Service{
 
     private IPenCtrl mPenCtrl;
     private Queue<Dot> mDotQueueForDB = null;
@@ -36,7 +36,7 @@ public class NeoSampleService extends Service {
     private DotConsumerForDBThread mDBThread = null;
     private DotConsumerForBroadcastThread mBroadcastThread = null;
 
-    private int curSectionId, curOwnerId, curBookcodeId, curPageNumber;
+    private int curSectionId, curOwnerId,  curBookcodeId, curPageNumber;
 
     private boolean ready = false;
 
@@ -45,82 +45,84 @@ public class NeoSampleService extends Service {
     private DbOpenHelper mDbOpenHelper;
 
     @Override
-    public void onCreate() {
+    public void onCreate ()
+    {
         super.onCreate();
 
         // Set Listener at pen Ctrl
         mPenCtrl = PenCtrl.getInstance();
-        mPenCtrl.setDotListener(mPenReceiveDotListener);
-        if (mPenCtrl.getOffLineDataListener() != null)
-            mPenCtrl.setOffLineDataListener(null);
-        mPenCtrl.setOffLineDataListener(mOfflineDataListener);
-        mPenCtrl.setMetadataListener(mMetadataListener);
+        mPenCtrl.setDotListener( mPenReceiveDotListener );
+        if(mPenCtrl.getOffLineDataListener() != null)
+            mPenCtrl.setOffLineDataListener( null );
+        mPenCtrl.setOffLineDataListener( mOfflineDataListener );
+        mPenCtrl.setMetadataListener( mMetadataListener );
 
         // Set Listener at Multi pen Ctrl
-        MultiPenCtrl.getInstance().setDotListener(mPenReceiveDotListener);
-        MultiPenCtrl.getInstance().setOffLineDataListener(mOfflineDataListener);
+        MultiPenCtrl.getInstance().setDotListener( mPenReceiveDotListener );
+        MultiPenCtrl.getInstance().setOffLineDataListener( mOfflineDataListener );
 
         // metadata load
         metadataCtrl = MetadataCtrl.getInstance();
-        metadataCtrl.loadFiles(Const.SAMPLE_FOLDER_PATH);
+        metadataCtrl.loadFiles( Const.SAMPLE_FOLDER_PATH);
 
         // create Queue
         mDotQueueForDB = new ConcurrentLinkedQueue<Dot>();
         mDotQueueForBroadcast = new ConcurrentLinkedQueue<DotWithAddress>();
 
-        mDBThread = new DotConsumerForDBThread(NeoSampleService.this);
-        mDBThread.setDaemon(true);
+        mDBThread = new DotConsumerForDBThread( NeoSampleService.this );
+        mDBThread.setDaemon( true );
         mDBThread.start();
 
         mBroadcastThread = new DotConsumerForBroadcastThread();
-        mBroadcastThread.setDaemon(true);
+        mBroadcastThread.setDaemon( true );
         mBroadcastThread.start();
 
-        mDbOpenHelper = new DbOpenHelper(this);
+        mDbOpenHelper = new DbOpenHelper( this);
         mDbOpenHelper.open();
         mDbOpenHelper.create();
 
-        NLog.d("Service Initialize complete");
+        NLog.d( "Service Initialize complete" );
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        NLog.d("onDestroy");
+        NLog.d( "onDestroy" );
 
-        if (mDBThread != null)
+        if(mDBThread != null)
             mDBThread.interrupt();
-        if (mBroadcastThread != null)
+        if(mBroadcastThread != null)
             mBroadcastThread.interrupt();
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        NLog.d("onStartCommand: " + startId);
+        NLog.d( "onStartCommand: " + startId );
         return START_STICKY;
     }
 
     @Override
-    public IBinder onBind(Intent intent) {
-        NLog.d("onBind - service binding");
+    public IBinder onBind ( Intent intent )
+    {
+        NLog.d( "onBind - service binding" );
         return null;
     }
 
 
     @Override
     public void onRebind(Intent intent) {
-        super.onRebind(intent);
-        NLog.d("onRebind");
+        super.onRebind( intent);
+        NLog.d( "onRebind" );
     }
 
 
     @Override
     public boolean onUnbind(Intent intent) {
-        NLog.d("onUnbind");
+        NLog.d( "onUnbind" );
         return super.onUnbind(intent);
     }
 
-    private void enqueueDot(Dot dot) {
+    private void enqueueDot(Dot dot){
         mDotQueueForDB.offer(dot);
 
         synchronized (mDotQueueForDB) {
@@ -128,27 +130,28 @@ public class NeoSampleService extends Service {
         }
     }
 
-    private void enqueueDotForBroadcast(String macAddress, Dot dot) {
+    private void enqueueDotForBroadcast(String macAddress, Dot dot){
 
-        mDotQueueForBroadcast.offer(new DotWithAddress(macAddress, dot));
+        mDotQueueForBroadcast.offer(new DotWithAddress(macAddress ,dot));
 
         synchronized (mDotQueueForBroadcast) {
             mDotQueueForBroadcast.notifyAll();
         }
     }
 
-    private void broadcastDot(String macAddress, Dot dot) {
+    private void broadcastDot ( String macAddress, Dot dot )
+    {
 
-        NLog.d("broadcastDot send: sectionId:" + dot.sectionId + " ownerId:" + dot.ownerId + " noteId:" + dot.noteId + " pageId:" + dot.pageId + " dotType:" + dot.dotType + ",X=" + dot.getX() + ",Y=" + dot.getY());
+        NLog.d( "broadcastDot send: sectionId:" + dot.sectionId + " ownerId:" + dot.ownerId + " noteId:" + dot.noteId + " pageId:" + dot.pageId + " dotType:" + dot.dotType+",X="+dot.getX()+",Y="+dot.getY() );
 
-        Intent intent = new Intent(Const.Broadcast.ACTION_PEN_DOT);
-        intent.putExtra(Const.Broadcast.PEN_ADDRESS, macAddress);
-        intent.putExtra(Const.Broadcast.EXTRA_DOT, dot);
-        sendBroadcast(intent);
+        Intent intent = new Intent( Const.Broadcast.ACTION_PEN_DOT);
+        intent.putExtra( Const.Broadcast.PEN_ADDRESS, macAddress );
+        intent.putExtra( Const.Broadcast.EXTRA_DOT, dot);
+        sendBroadcast( intent );
     }
 
-    private void sendBroadcastIfPageChanged(int sectionId, int ownerId, int bookcodeId, int pageNumber) {
-        if (curSectionId != sectionId || curOwnerId != ownerId || curBookcodeId != bookcodeId) {
+    private void sendBroadcastIfPageChanged(int sectionId, int ownerId, int bookcodeId, int pageNumber){
+        if(curSectionId != sectionId || curOwnerId != ownerId || curBookcodeId != bookcodeId ){
             curSectionId = sectionId;
             curOwnerId = ownerId;
             curBookcodeId = bookcodeId;
@@ -157,78 +160,91 @@ public class NeoSampleService extends Service {
             curBookcodeId = bookcodeId;
         }
 
-        if (curPageNumber != pageNumber) {
+        if(curPageNumber != pageNumber){
             curPageNumber = pageNumber;
             sendPageChangedBroadcast();
             ready = false;
-            NLog.d("sendBroadcastIfPageChanged ready=" + ready);
+            NLog.d( "sendBroadcastIfPageChanged ready="+ready );
         }
     }
 
     private IPenDotListener mPenReceiveDotListener = new IPenDotListener() {
 
         @Override
-        public void onReceiveDot(String macAddress, Dot dot) {
-            NLog.d("NeoSampleService onReceiveDot mac_address=" + macAddress + "dotType=" + dot.dotType + " ,pressure=" + dot.pressure + ",x=" + dot.getX() + ",y=" + dot.getY());
+        public void onReceiveDot ( String macAddress, Dot dot )
+        {
+            NLog.d( "NeoSampleService onReceiveDot mac_address="+macAddress+"dotType=" + dot.dotType+" ,pressure="+dot.pressure+",x="+dot.getX()+",y="+dot.getY() );
             sendBroadcastIfPageChanged(dot.sectionId, dot.ownerId, dot.noteId, dot.pageId);
-            enqueueDot(dot);
+            enqueueDot( dot );
             enqueueDotForBroadcast(macAddress, dot);
 
         }
     };
 
-    private IOfflineDataListener mOfflineDataListener = new IOfflineDataListener() {
+    private IOfflineDataListener mOfflineDataListener = new IOfflineDataListener()
+    {
         @Override
-        public void onReceiveOfflineStrokes(Object extra, String macAddress, Stroke[] strokes, int sectionId, int ownerId, int noteId, Symbol[] symbols) {
+        public void onReceiveOfflineStrokes ( Object extra, String macAddress, Stroke[] strokes, int sectionId, int ownerId, int noteId, Symbol[] symbols )
+        {
 
-            if (strokes == null || strokes.length <= 0) {
-                NLog.e("onReceiveOfflineStrokes strokes size =0!!");
+            if( strokes == null || strokes.length <= 0 )
+            {
+                NLog.e( "onReceiveOfflineStrokes strokes size =0!!");
                 return;
             }
 
             // Filtering 0 size dot
             ArrayList<Stroke> newArrayList = new ArrayList<Stroke>();
 
-            for (Stroke s : strokes) {
-                if (s.size() > 0) {
-                    NLog.d("onReceiveOfflineStrokes s sectionId=" + s.sectionId + " ownerId=" + s.ownerId + " noteId=" + s.noteId + " pageId=" + s.pageId);
+            for(Stroke s : strokes)
+            {
+                if(s.size() > 0 )
+                {
+                    NLog.d( "onReceiveOfflineStrokes s sectionId="+s.sectionId+" ownerId="+s.ownerId+" noteId="+s.noteId+" pageId="+s.pageId );
                     s.color = Color.BLACK;
-                    newArrayList.add(s);
+                    newArrayList.add( s );
 
                     // DB에 stroke 를 저장한다.
                     // DB Insert
                     mDbOpenHelper.open();
-                    mDbOpenHelper.insertStroke(s);
-                } else
-                    NLog.e("onReceiveOfflineStrokes Dot size =0!!");
+                    mDbOpenHelper.insertStroke( s );
+                }
+                else
+                {
+                    NLog.e( "onReceiveOfflineStrokes Dot size =0!!");
                 }
             }
 
-            Intent i = new Intent(Const.Broadcast.ACTION_OFFLINE_STROKES);
-            i.putExtra(Const.Broadcast.PEN_ADDRESS, macAddress);
-            i.putExtra(Const.Broadcast.EXTRA_OFFLINE_STROKES, newArrayList.toArray(new Stroke[newArrayList.size()]));
-            i.putExtra(Const.Broadcast.EXTRA_SECTION_ID, sectionId);
-            i.putExtra(Const.Broadcast.EXTRA_OWNER_ID, ownerId);
-            i.putExtra(Const.Broadcast.EXTRA_BOOKCODE_ID, noteId);
-            getApplicationContext().sendBroadcast(i);
-
+            Intent i = new Intent( Const.Broadcast.ACTION_OFFLINE_STROKES );
+            i.putExtra( Const.Broadcast.PEN_ADDRESS, macAddress );
+            i.putExtra( Const.Broadcast.EXTRA_OFFLINE_STROKES, newArrayList.toArray(new Stroke[newArrayList.size()]) );
+            i.putExtra( Const.Broadcast.EXTRA_SECTION_ID, sectionId );
+            i.putExtra( Const.Broadcast.EXTRA_OWNER_ID, ownerId );
+            i.putExtra( Const.Broadcast.EXTRA_BOOKCODE_ID, noteId );
+            getApplicationContext().sendBroadcast( i );
 
         }
     };
 
     // MetadataCtrl 에서 nproj 로딩, symbol 체크 시 callback
-    private IMetadataListener mMetadataListener = new IMetadataListener() {
+    private IMetadataListener mMetadataListener = new IMetadataListener()
+    {
         @Override
-        public void onSymbolDetected(Symbol[] symbols) {
-            for (final Symbol s : symbols) {
-                if (s != null) {
-                    Handler handler = new Handler(Looper.getMainLooper());
-                    handler.post(new Runnable() {
+        public void onSymbolDetected( Symbol[] symbols )
+        {
+            for( final Symbol s: symbols )
+            {
+                if(s != null)
+                {
+                    Handler handler = new Handler( Looper.getMainLooper() );
+                    handler.post( new Runnable()
+                    {
                         @Override
-                        public void run() {
-                            Toast.makeText(getApplicationContext(), "Symbol Check!! Action=" + s.getAction() + ", Param=" + s.getParam(), Toast.LENGTH_LONG).show();
+                        public void run()
+                        {
+                            Toast.makeText( getApplicationContext(), "Symbol Check!! Action="+s.getAction()+", Param="+s.getParam(), Toast.LENGTH_LONG).show();
                         }
-                    });
+                    } );
 
                 }
             }
@@ -236,9 +252,9 @@ public class NeoSampleService extends Service {
     };
 
 
-    private void sendPageChangedBroadcast() {
+    private void sendPageChangedBroadcast(){
 
-        NLog.i("Page Changed-> curSectionId:" + curSectionId + " curOwnerId:" + curOwnerId + " curBookcodeId:" + curBookcodeId + " curPageNumber:" + curPageNumber);
+        NLog.i( "Page Changed-> curSectionId:" + curSectionId + " curOwnerId:" + curOwnerId + " curBookcodeId:" + curBookcodeId+ " curPageNumber:" + curPageNumber);
 
         Intent intent = new Intent(Const.Broadcast.ACTION_WRITE_PAGE_CHANGED);
         intent.putExtra(Const.Broadcast.EXTRA_SECTION_ID, curSectionId);
@@ -246,11 +262,11 @@ public class NeoSampleService extends Service {
         intent.putExtra(Const.Broadcast.EXTRA_BOOKCODE_ID, curBookcodeId);
         intent.putExtra(Const.Broadcast.EXTRA_PAGE_NUMBER, curPageNumber);
 
-        sendBroadcast(intent);
+        sendBroadcast( intent );
     }
 
 
-    private final class DotConsumerForDBThread extends Thread {
+    private final class DotConsumerForDBThread extends Thread{
         private int dotCount = 0;
         private int eraserDotCount = 0;
 
@@ -271,33 +287,34 @@ public class NeoSampleService extends Service {
 
             setName(this.getClass().getSimpleName());
 
-            while (true) {
+            while(true){
 
-                while (!mDotQueueForDB.isEmpty()) {
+                while(!mDotQueueForDB.isEmpty()){
                     Dot dot = null;
 
                     dot = mDotQueueForDB.poll();
 
-                    if (dot != null)
+                    if(dot != null )
                         insert(dot);
                 }
 
-                try {
+                try{
                     synchronized (mDotQueueForDB) {
                         mDotQueueForDB.wait();
                     }
-                } catch (InterruptedException e) {
-                    NLog.d("DotConsumerThread Interrupted!!" + e);
+                } catch (InterruptedException e){
+                    NLog.d( "DotConsumerThread Interrupted!!" + e );
                 }
             }
         }
 
-        public void insert(Dot dot) {
-            checkNotebookAndPageChange(dot);
+        public void insert(Dot dot ){
+            checkNotebookAndPageChange( dot );
 
             if (DotType.isPenActionDown(dot.dotType)) {
-                checkNotebookAndPageChange(dot);
-                if (dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL) {
+                checkNotebookAndPageChange( dot );
+                if(dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL)
+                {
                     dotArray.add(dot);
                     dotCount++;
                 }
@@ -307,9 +324,10 @@ public class NeoSampleService extends Service {
 
                 // 스트로크 시작 dot 가 없는데 move dot 이 들어오면
                 // 시작 dot 을 추가
-                if (dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL) {
-                    if (dotCount == 0) {
-                        Dot startDot = new Dot(dot.x, dot.y, dot.pressure, DotType.PEN_ACTION_DOWN.getValue(), dot.timestamp, dot.sectionId, dot.ownerId, dot.noteId, dot.pageId, dot.color, dot.penTipType, dot.tiltX, dot.tiltY, dot.twist);
+                if(dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL)
+                {
+                    if(dotCount == 0){
+                        Dot startDot = new Dot( dot.x, dot.y, dot.pressure, DotType.PEN_ACTION_DOWN.getValue(), dot.timestamp, dot.sectionId, dot.ownerId, dot.noteId, dot.pageId, dot.color,dot.penTipType, dot.tiltX, dot.tiltY,dot.twist);
                         insert(startDot);
                     }
                     dotArray.add(dot);
@@ -319,7 +337,8 @@ public class NeoSampleService extends Service {
             // dot end, insert to db and then flush data
             else if (DotType.isPenActionUp(dot.dotType)) {
 
-                if (dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL) {
+                if(dot.penTipType == Stroke.PEN_TIP_TYPE_NORMAL)
+                {
                     dotArray.add(dot);
                     dotCount++;
                     insertStrokeDotsArray(dotArray, false);
@@ -337,30 +356,33 @@ public class NeoSampleService extends Service {
                 changed = true;
             }
 
-            if (changed) {
-                if (dotArray.size() > 0) {
-                    Dot lastDot = dotArray.get(dotArray.size() - 1);
+            if(changed)
+            {
+                if(dotArray.size() > 0){
+                    Dot lastDot = dotArray.get(dotArray.size()-1);
                     //makeUpDot
-                    Dot upDot = new Dot(lastDot.x, lastDot.y, lastDot.pressure, DotType.PEN_ACTION_UP.getValue(), lastDot.timestamp, lastDot.sectionId, lastDot.ownerId, lastDot.noteId, lastDot.pageId, lastDot.color, lastDot.penTipType, lastDot.tiltX, lastDot.tiltY, lastDot.twist);
-                    dotArray.add(upDot);
+                    Dot upDot = new Dot( lastDot.x, lastDot.y, lastDot.pressure, DotType.PEN_ACTION_UP.getValue(), lastDot.timestamp, lastDot.sectionId, lastDot.ownerId, lastDot.noteId, lastDot.pageId, lastDot.color,lastDot.penTipType, lastDot.tiltX, lastDot.tiltY, lastDot.twist);
+                    dotArray.add( upDot );
                     insertStrokeDotsArray(dotArray, false);
                 }
             }
         }
 
-        private void insertStrokeDotsArray(ArrayList<Dot> dotArray, boolean isEraser) {
+        private void insertStrokeDotsArray(ArrayList<Dot> dotArray, boolean isEraser){
             Stroke s = null;
-            for (Dot d : dotArray) {
-                if (s == null) {
-                    s = new Stroke(d.sectionId, d.ownerId, d.noteId, d.pageId, Color.BLACK);
+            for(Dot d : dotArray)
+            {
+                if(s == null)
+                {
+                    s = new Stroke(d.sectionId, d.ownerId, d.noteId, d.pageId, Color.BLACK );
                     s.penTipType = d.penTipType;
-                    if (s.penTipType == Stroke.PEN_TIP_TYPE_NORMAL)
+                    if(s.penTipType == Stroke.PEN_TIP_TYPE_NORMAL)
                         s.thickness = 1;
                 }
-                s.add(d);
+                s.add( d );
             }
             dotArray.clear();
-            if (isEraser)
+            if(isEraser)
                 eraserDotCount = 0;
             else
                 dotCount = 0;
@@ -368,47 +390,48 @@ public class NeoSampleService extends Service {
             // DB에 stroke 를 저장한다.
             // DB Insert
             mDbOpenHelper.open();
-            mDbOpenHelper.insertStroke(s);
+            mDbOpenHelper.insertStroke( s );
         }
 
     }
 
-    private final class DotConsumerForBroadcastThread extends Thread {
+    private final class DotConsumerForBroadcastThread extends Thread{
 
         @Override
         public void run() {
 
-            setName(this.getClass().getSimpleName());
+            setName( this.getClass().getSimpleName() );
 
 
-            while (true) {
+            while(true){
 
-                while (!mDotQueueForBroadcast.isEmpty()) {
+                while(!mDotQueueForBroadcast.isEmpty()){
                     Dot dot = null;
                     DotWithAddress dotWithAddress = mDotQueueForBroadcast.poll();
                     dot = dotWithAddress.dot;
 
-                    if (dot != null) {
+                    if(dot != null){
                         broadcastDot(dotWithAddress.address, dot);
                     }
                 }
 
-                try {
+                try{
                     synchronized (mDotQueueForBroadcast) {
                         mDotQueueForBroadcast.wait();
                     }
-                } catch (InterruptedException e) {
-                    NLog.d("DotConsumerThread Interrupted!!" + e);
+                } catch (InterruptedException e){
+                    NLog.d( "DotConsumerThread Interrupted!!" + e);
                 }
             }
         }
     }
 
-    private class DotWithAddress {
+    private class DotWithAddress
+    {
         public Dot dot = null;
         public String address = null;
-
-        public DotWithAddress(String address, Dot dot) {
+        public DotWithAddress(String address, Dot dot)
+        {
             this.dot = dot;
             this.address = address;
         }

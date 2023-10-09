@@ -1,5 +1,7 @@
 package kr.neolab.samplecode;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -19,11 +21,16 @@ import android.os.Environment;
 import android.os.Parcelable;
 //import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
@@ -87,6 +94,15 @@ public class MainActivity extends Activity
 
         setContentView(R.layout.activity_main);
 
+        final ZoomLinearLayout zoomLinearLayout = (ZoomLinearLayout) findViewById(R.id.zoom_linear_layout);
+        zoomLinearLayout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                zoomLinearLayout.init(MainActivity.this);
+                return false;
+            }
+        });
+
         try {
             ViewConfiguration config = ViewConfiguration.get(this);
             Field menuKeyField = ViewConfiguration.class.getDeclaredField("sHasPermanentMenuKey");
@@ -105,7 +121,7 @@ public class MainActivity extends Activity
 
         PendingIntent pendingIntent = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            pendingIntent = PendingIntent.getActivity
+            pendingIntent = getActivity
                     (this, 0, new Intent("firmware_update"), PendingIntent.FLAG_MUTABLE);
         } else {
             pendingIntent = PendingIntent.getBroadcast(this, 0, new Intent("firmware_update"), PendingIntent.FLAG_UPDATE_CURRENT);
@@ -148,7 +164,6 @@ public class MainActivity extends Activity
         builder.setCancelable(false);
         builder.create().show();
     }
-
 
     private void chkPermissions() {
         if (Build.VERSION.SDK_INT >= 23) {
@@ -379,6 +394,7 @@ public class MainActivity extends Activity
                 if (connectionMode == 0) {
                     if (penClientCtrl.isAuthorized()) {
                         // to process saved offline data
+                        Log.d("Inside here", "Comes inside db.....1");
                         penClientCtrl.reqOfflineDataList();
                     }
                 } else {
@@ -635,9 +651,7 @@ public class MainActivity extends Activity
                 break;
             // Message when a connection attempt is unsuccessful pen
             case PenMsgType.PEN_CONNECTION_FAILURE:
-
                 Util.showToast(this, "connection has failed.");
-
                 break;
 
 
@@ -682,6 +696,7 @@ public class MainActivity extends Activity
                         int ownerId = jobj.getInt(JsonTag.INT_OWNER_ID);
                         int noteId = jobj.getInt(JsonTag.INT_NOTE_ID);
                         NLog.d(TAG, "offline(" + (i + 1) + ") note => sectionId : " + sectionId + ", ownerId : " + ownerId + ", noteId : " + noteId);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
