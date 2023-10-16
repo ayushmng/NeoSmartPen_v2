@@ -1,8 +1,8 @@
 
 *.lock
 *.bin
-*.properties
-*.gradle
+#*.properties
+#*.gradle
 *.jar
 *.iml
 gradlew
@@ -16,12 +16,10 @@ NASDK_sample_code/src/.DS_Store
 *.ap_
 NASDK_sample_code/build
 *.json
-/local.properties
 /.idea/workspace.xml
 # generated files
 bin/
 gen/
-local.properties
 
 # Eclipse project files
 .classpath
@@ -40,3 +38,8 @@ proguard_logs/
 
 adt-bundle-windows-x86_64/
 NASDK_sample_code/src/main/assets/firmware_files/.DS_Store
+*.probe
+NASDK_sample_code/.DS_Store
+.DS_Store
+gc.properties
+cache.properties

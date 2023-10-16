@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<kr.neolab.samplecode.ZoomLinearLayout android:layout_width="match_parent"-->
-<!--    android:id="@+id/zoom_linear_layout"-->
-<!--    android:layout_height="match_parent"-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android">-->
+<kr.neolab.samplecode.ZoomLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/zoom_linear_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-<!--    <ImageView-->
-<!--        android:id="@+id/testImage"-->
-<!--        android:layout_width="100dp"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:contentDescription="test Image from database" />-->
+    <!--    <ImageView-->
+    <!--        android:id="@+id/testImage"-->
+    <!--        android:layout_width="100dp"-->
+    <!--        android:layout_height="100dp"-->
+    <!--        android:contentDescription="test Image from database" />-->
 
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <FrameLayout
             android:id="@+id/sampleview_frame"
             android:layout_width="match_parent"
@@ -22,4 +23,4 @@
     </LinearLayout>
 
 
-<!--</kr.neolab.samplecode.ZoomLinearLayout>-->
+</kr.neolab.samplecode.ZoomLinearLayout>
