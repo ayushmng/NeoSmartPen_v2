@@ -2,7 +2,6 @@
 *.lock
 *.bin
 *.properties
-*.xml
 *.gradle
 *.jar
 *.iml
@@ -40,3 +39,4 @@ proguard_logs/
 .idea/
 
 adt-bundle-windows-x86_64/
+NASDK_sample_code/src/main/assets/firmware_files/.DS_Store
