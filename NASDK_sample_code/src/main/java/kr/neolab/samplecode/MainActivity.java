@@ -21,31 +21,32 @@ import android.os.Environment;
 import android.os.Parcelable;
 //import android.support.v4.content.ContextCompat;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
-import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.widget.ImageView;
 
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+
+import com.bumptech.glide.Glide;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Field;
+import java.sql.Blob;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import kr.neolab.samplecode.Const.Broadcast;
 import kr.neolab.samplecode.Const.JsonTag;
 import kr.neolab.samplecode.provider.DbOpenHelper;
+import kr.neolab.samplecode.provider.PenDataModal;
 import kr.neolab.sdk.ink.structure.Dot;
 import kr.neolab.sdk.ink.structure.Stroke;
 import kr.neolab.sdk.metadata.MetadataCtrl;
@@ -87,12 +88,40 @@ public class MainActivity extends Activity
     private int connectionMode = 0;
 
     private ArrayList<String> connectedList = null;
+    DbOpenHelper dbOpenHelper;
+    private ArrayList<PenDataModal> penDataModalArrayList;
+    PenDataModal penDataModal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+//        ImageView imageView = findViewById(R.id.testImage);
+        ArrayList<byte[]> testImage = new ArrayList<>();
+
+        try {
+        penDataModalArrayList = new ArrayList<PenDataModal>();
+        dbOpenHelper = new DbOpenHelper(this);
+        penDataModalArrayList = dbOpenHelper.readPenData();
+//        penDataModal = penDataModalArrayList.get(0);
+
+            for (PenDataModal _id : penDataModalArrayList) {
+                testImage.add(_id.getDots());
+//                Log.d("Display database data: ", String.valueOf(_id.getId()));
+            }
+        } catch (Exception e) {
+            Log.d("Exception", "Throws exception while loading data from db", e);
+            e.printStackTrace();
+        }
+
+//        Log.d("First index id: ", Arrays.toString(testImage.get(0)));
+
+//        Glide.with(this)
+//                .load((testImage.get(0)))
+//                .into(imageView);
+
+//        imageView.setImageResource(R.drawable.ic_home);
 
         final ZoomLinearLayout zoomLinearLayout = (ZoomLinearLayout) findViewById(R.id.zoom_linear_layout);
         zoomLinearLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -240,7 +269,6 @@ public class MainActivity extends Activity
         super.onPause();
 
         unregisterReceiver(mBroadcastReceiver);
-
     }
 
     @Override
@@ -252,11 +280,9 @@ public class MainActivity extends Activity
         filter.addAction(Broadcast.ACTION_OFFLINE_STROKES);
         filter.addAction(Broadcast.ACTION_WRITE_PAGE_CHANGED);
 
-
         filter.addAction("firmware_update");
 
         registerReceiver(mBroadcastReceiver, filter);
-
 
     }
 
@@ -316,14 +342,6 @@ public class MainActivity extends Activity
         Intent oIntent = new Intent();
         oIntent.setClass(this, NeoSampleService.class);
         stopService(oIntent);
-
-        if (penClientCtrl != null)
-            penClientCtrl.disconnect();
-        if (multiPenClientCtrl != null) {
-            ArrayList<String> penAddressList = multiPenClientCtrl.getConnectDevice();
-            for (String address : penAddressList)
-                multiPenClientCtrl.disconnect(address);
-        }
 
     }
 
@@ -631,7 +649,6 @@ public class MainActivity extends Activity
             case PenMsgType.PEN_CONNECTION_TRY:
 
                 Util.showToast(this, "try to connect.");
-
                 break;
 
             // Pens when the connection is completed (state certification process is not yet in progress)
@@ -685,9 +702,9 @@ public class MainActivity extends Activity
 
             // Offline Data List response of the pen
             case PenMsgType.OFFLINE_DATA_NOTE_LIST:
-
                 try {
                     JSONArray list = new JSONArray(content);
+                    Log.d("Show offline data: ", String.valueOf(list));
 
                     for (int i = 0; i < list.length(); i++) {
                         JSONObject jobj = list.getJSONObject(i);
@@ -709,11 +726,12 @@ public class MainActivity extends Activity
 
             // Messages for offline data transfer begins
             case PenMsgType.OFFLINE_DATA_SEND_START:
-
+                Log.d("Show offline data2: ", "Here it comes");
                 break;
 
             // Offline data transfer completion
             case PenMsgType.OFFLINE_DATA_SEND_SUCCESS:
+                Log.d("Show offline data3: ", "Here it comes");
                 if (connectionMode == 0) {
                     if (penClientCtrl.getProtocolVersion() == 1)
                         parseOfflineData(penAddress);
@@ -726,11 +744,12 @@ public class MainActivity extends Activity
 
             // Offline data transfer failure
             case PenMsgType.OFFLINE_DATA_SEND_FAILURE:
-
+                Log.d("Show offline data4: ", "Here it comes");
                 break;
 
             // Progress of the data transfer process offline
             case PenMsgType.OFFLINE_DATA_SEND_STATUS: {
+                Log.d("Show offline data5: ", "Here it comes");
                 try {
                     JSONObject job = new JSONObject(content);
 
@@ -746,6 +765,7 @@ public class MainActivity extends Activity
 
             // When the file transfer process of the download offline
             case PenMsgType.OFFLINE_DATA_FILE_CREATED: {
+                Log.d("Show offline data6: ", "Here it comes");
                 try {
                     JSONObject job = new JSONObject(content);
 
@@ -788,6 +808,7 @@ public class MainActivity extends Activity
             }
 
             case PenMsgType.OFFLINE_NOTE_INFO: {
+                Log.d("Show offline data7: ", "Here it comes");
                 try {
                     JSONObject job = new JSONObject(content);
 
