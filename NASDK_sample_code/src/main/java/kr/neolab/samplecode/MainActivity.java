@@ -14,12 +14,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Parcelable;
 //import android.support.v4.content.ContextCompat;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +30,12 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextClock;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.core.app.ActivityCompat;
 
@@ -91,6 +98,7 @@ public class MainActivity extends Activity
     DbOpenHelper dbOpenHelper;
     private ArrayList<PenDataModal> penDataModalArrayList;
     PenDataModal penDataModal;
+    public TextView txtV1, txtV2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +106,8 @@ public class MainActivity extends Activity
 
         setContentView(R.layout.activity_main);
 //        ImageView imageView = findViewById(R.id.testImage);
+        txtV1 = findViewById(R.id.no_msg1);
+        txtV2 = findViewById(R.id.no_msg2);
         ArrayList<byte[]> testImage = new ArrayList<>();
 
         try {
@@ -108,20 +118,29 @@ public class MainActivity extends Activity
 
             for (PenDataModal _id : penDataModalArrayList) {
                 testImage.add(_id.getDots());
-//                Log.d("Display database data: ", String.valueOf(_id.getId()));
+                Log.d("Display database data: ", Arrays.toString(_id.getDots()));
             }
         } catch (Exception e) {
             Log.d("Exception", "Throws exception while loading data from db", e);
             e.printStackTrace();
         }
 
-//        Log.d("First index id: ", Arrays.toString(testImage.get(0)));
+        Log.d("First index id: ", Arrays.toString(testImage.get(0)));
 
 //        Glide.with(this)
-//                .load((testImage.get(0)))
+//                .load(Arrays.toString(testImage.get(0)))
+//                .placeholder(R.drawable.ic_launcher_n)
 //                .into(imageView);
 
-//        imageView.setImageResource(R.drawable.ic_home);
+        Bitmap bm = BitmapFactory.decodeByteArray(testImage.get(0), 0, testImage.get(0).length);
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+//        imageView.setMinimumHeight(dm.heightPixels);
+//        imageView.setMinimumWidth(dm.widthPixels);
+//        imageView.setImageBitmap(bm);
+
+//        imageView.setImageResource(R.drawable.ic_launcher_n);
 
         final ZoomLinearLayout zoomLinearLayout = (ZoomLinearLayout) findViewById(R.id.zoom_linear_layout);
         zoomLinearLayout.setOnTouchListener(new View.OnTouchListener() {
@@ -164,7 +183,6 @@ public class MainActivity extends Activity
         mBuilder.setSmallIcon(R.drawable.ic_launcher_n);
         mBuilder.setContentIntent(pendingIntent);
 
-
         chkPermissions();
 
         Intent oIntent = new Intent();
@@ -192,6 +210,14 @@ public class MainActivity extends Activity
         });
         builder.setCancelable(false);
         builder.create().show();
+    }
+
+    private void setMargins (View view, int left, int top, int right, int bottom) {
+        if (view.getLayoutParams() instanceof ViewGroup.MarginLayoutParams) {
+            ViewGroup.MarginLayoutParams p = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+            p.setMargins(left, top, right, bottom);
+            view.requestLayout();
+        }
     }
 
     private void chkPermissions() {
@@ -380,6 +406,8 @@ public class MainActivity extends Activity
             case R.id.action_connect:
                 if (connectionMode == 1 || (connectionMode == 0 && !penClientCtrl.isConnected())) {
                     startActivityForResult(new Intent(MainActivity.this, DeviceListActivity.class), 4);
+                } else {
+                    Toast.makeText(this, "Pen is already connected", Toast.LENGTH_SHORT).show();
                 }
                 return true;
 
@@ -885,6 +913,13 @@ public class MainActivity extends Activity
                 Dot dot = intent.getParcelableExtra(Broadcast.EXTRA_DOT);
                 dot.color = Color.BLACK;
                 handleDot(penAddress, dot);
+                //Added to show or hide initial text view
+                if(penAddress != null) {
+                    txtV1.setVisibility(View.INVISIBLE);
+                    txtV2.setVisibility(View.INVISIBLE);
+                    setMargins(txtV1, 0, -50,0,0);
+                    setMargins(txtV2, 0, -50,0,0);
+                }
             } else if (Broadcast.ACTION_OFFLINE_STROKES.equals(action)) {
                 String penAddress = intent.getStringExtra(Broadcast.PEN_ADDRESS);
                 Parcelable[] array = intent.getParcelableArrayExtra(Broadcast.EXTRA_OFFLINE_STROKES);

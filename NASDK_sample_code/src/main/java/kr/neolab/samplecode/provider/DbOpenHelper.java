@@ -67,6 +67,7 @@ public class DbOpenHelper {
     public long insertStroke(Stroke stroke) {
 
         ArrayList<Dot> dotArray = stroke.getDots();
+        Log.d("Show dots array: ", String.valueOf(dotArray));
 
         Uri strokeUri = null;
         final int N = dotArray.size();

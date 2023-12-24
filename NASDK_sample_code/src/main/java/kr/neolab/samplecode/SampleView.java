@@ -80,6 +80,7 @@ public class SampleView extends View {
 
     private void initView() {
         strokes.clear();
+
         if (background != null) {
             background.recycle();
             background = null;

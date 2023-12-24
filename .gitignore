@@ -39,7 +39,7 @@ proguard_logs/
 adt-bundle-windows-x86_64/
 NASDK_sample_code/src/main/assets/firmware_files/.DS_Store
 *.probe
-NASDK_sample_code/.DS_Store
 .DS_Store
 gc.properties
 cache.properties
+NASDK_sample_code/.DS_Store
